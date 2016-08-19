@@ -1,0 +1,91 @@
+int val;
+float mv,cel,farh;
+int tempPin0 = A0;
+int tempPin1 = A1;
+int tempPin2 = A2;
+int tempPin3 = A3;
+int tempPin4 = A4;
+int tempPin5=A5;
+void setup()
+{
+Serial.begin(9600);
+}
+void loop()
+{
+val = analogRead(tempPin0);
+ mv = ( val/1024.0)*5000; 
+cel = mv/10;
+ farh = (cel*9)/5 + 32;
+
+//Serial.print("TEMPRATURE 0 = ");
+Serial.print(cel);
+Serial.print(",");
+//Serial.print("*C");
+//Serial.println();
+
+val = analogRead(tempPin1);
+ mv = ( val/1024.0)*5000; 
+ cel = mv/10;
+ farh = (cel*9)/5 + 32;
+
+//Serial.print("TEMPRATURE 1 = ");
+Serial.print(cel);
+//Serial.print("*C");
+//Serial.println();
+Serial.print(",");
+
+val = analogRead(tempPin2);
+ mv = ( val/1024.0)*5000; 
+ cel = mv/10;
+ farh = (cel*9)/5 + 32;
+
+//Serial.print("TEMPRATURE 2 = ");
+Serial.print(cel);
+//Serial.print("*C");
+//Serial.println();
+Serial.print(",");
+
+val = analogRead(tempPin3);
+mv = ( val/1024.0)*5000; 
+ cel = mv/10;
+ farh = (cel*9)/5 + 32;
+
+//Serial.print("TEMPRATURE 3 = ");
+Serial.print(cel);
+//Serial.print("*C");
+//Serial.println();
+Serial.print(",");
+
+val = analogRead(tempPin4);
+ mv = ( val/1024.0)*5000; 
+ cel = mv/10;
+ farh = (cel*9)/5 + 32;
+
+//Serial.print("TEMPRATURE 4 = ");
+Serial.print(cel);
+//Serial.print("*C");
+//Serial.println();
+Serial.print(",");
+
+
+val = analogRead(tempPin5);
+ mv = ( val/1024.0)*5000; 
+ cel = mv/10;
+ farh = (cel*9)/5 + 32;
+
+//Serial.print("TEMPRATURE 5 = ");
+Serial.print(cel);
+//Serial.print("*C");
+//Serial.println();
+Serial.println();
+delay(400);
+
+/* uncomment this to get temperature in farenhite 
+Serial.print("TEMPRATURE = ");
+Serial.print(farh);
+Serial.print("*F");
+Serial.println();
+
+
+*/
+}
