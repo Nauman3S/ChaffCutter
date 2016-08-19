@@ -1,0 +1,119 @@
+/*
+ * Capacitive Turbulence Sensor Demo
+ * by Ian Pritchard
+  
+ * Open-source code, provided by Anthrobotics Canada
+ * "We are the friendly future of robotics"
+ */
+
+const int numReadings = 50;     
+int readings[numReadings];      
+int readIndex = 0;              
+float total = 0;                
+float average = 0;              
+
+int inputPin = A3;              // readings are from A3
+
+int lastMax = 0;                 
+int maxVal = 0;                  
+int maxI = 0;                    
+
+const int maxReadingsN = 100;    
+int maxReadings[maxReadingsN];   
+
+int maxChange = 0;               
+int lastMaxChange = 0;           
+
+void setup() {
+
+  Serial.begin(250000);          // Fast serial speed to improve readings
+  analogReference(INTERNAL);     
+
+  for (int thisReading = 0; thisReading < numReadings; thisReading++) { 
+    readings[thisReading] = 0;
+  }
+}
+
+void loop() {
+
+  long now = millis(); 
+  takeReading();       
+  if (now % 10 == 0) { 
+    sendReading();     
+  }
+
+  while (millis() == now) {
+   
+  }
+}
+
+void takeReading() {
+  float a = getAverage(analogRead(inputPin)); 
+  getMax(a); 
+
+  int change = maxVal - lastMax; 
+  if (change < 0) {
+    change *= -1;  
+  }
+  if (change > 1) { 
+    if (change > maxChange) {
+      maxChange = change; 
+    }
+  }
+  lastMax = maxVal;
+}
+
+void sendReading() {
+  int output = 0;
+  if (maxChange > 0) { 
+    lastMaxChange = maxChange;
+    output = maxChange;
+  }
+  else { 
+    output = lastMaxChange;
+  }
+  maxChange = 0;
+  if (output < 900) { // This skips a huge burst of change when the Arduino boots
+    Serial.println(output); // Send turbulence value to Serial port.
+    analogWrite(3, constrain(output, 1, 254)); // Write turbulence value to PWM on Pin 3. Use pulseIn() with an Pin Change Interrupt on another Arduino to decode this easily.
+                                               // The value is never 0 or 255 to keep PWM pulsing for the external interrupt of the other board.
+  }
+}
+
+void getMax(int reading) { 
+
+  maxReadings[maxI] = reading;
+  maxI++;
+  if (maxI > maxReadingsN) {
+    maxI = 0;
+    maxVal = 0;
+    int i = 0;
+    while (i < maxReadingsN) {
+      if (maxReadings[i] > maxVal) {
+        maxVal = maxReadings[i];
+      }
+      i++;
+    }
+  }
+}
+
+float getAverage(int reading) { // This is used for smoothing of the data received from A3.
+ 
+  total = total - readings[readIndex];
+  
+  readings[readIndex] = reading;
+  
+  total = total + readings[readIndex];
+
+  readIndex = readIndex + 1;
+
+  
+  if (readIndex >= numReadings) {
+    
+    readIndex = 0;
+  }
+
+ 
+  average = total / numReadings;
+  return average;
+}
