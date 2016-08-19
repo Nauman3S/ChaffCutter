@@ -1,0 +1,19 @@
+#include <CapacitiveSensor.h>
+
+
+int mostureSensor = A0;//</p><p>
+void setup() {
+  // Serial Begin so we can see the data from the mosture sensor in our serial input window. 
+  Serial.begin(9600);
+  // setting the led pins to outputs
+
+}
+void loop() {
+  // read the input on analog pin 0:
+  int sensorValue = analogRead(mostureSensor);
+  // print out the value you read:</p><p>  Serial.println(sensorValue);
+  
+
+Serial.println(sensorValue);
+  delay(500);        // delay 1 second between reads
+}
