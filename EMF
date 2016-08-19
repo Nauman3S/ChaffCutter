@@ -1,0 +1,39 @@
+#define SAMPLE_SIZE 50
+
+int ledPin = 11;
+int inPin = A5;
+int val = 0;
+int rSample[SAMPLE_SIZE];
+long avg = 0;
+
+void setup(){
+  Serial.begin(9600);
+
+}
+
+void loop(){
+ 
+  val = analogRead(inPin);                    
+  rSample[0] = val;                          
+                                              
+
+  
+  for (int i = SAMPLE_SIZE - 1; i > 0 ; i--){     
+    avg = avg + rSample[i];                    
+    rSample[i] = rSample[i-1];                 
+  }                                               
+  
+   avg = avg / SAMPLE_SIZE;
+   val= int(avg);
+   avg = 0;   
+   
+  if(val>=1){
+    val = constrain(val, 1, 100);
+    val = map(val, 1, 100, 1, 255);
+    analogWrite(ledPin, val);
+  }
+  else {
+    analogWrite(ledPin, 0);
+  }
+  Serial.println(val);
+}
